@@ -3,12 +3,9 @@ package ru.practicum.shareit.user;
 import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.practicum.shareit.ShareItApp;
 import ru.practicum.shareit.TestClient.TestClient;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
@@ -23,18 +20,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static ru.practicum.shareit.TestClient.TestClient.TestHttpMethod.*;
 
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserControllerTest {
     private final TestClient client;
     private final UserMapper userMapper;
     private final String users = "/users";
     private final List<Long> idListForCleanUp = new ArrayList<>();
-
-    @BeforeAll
-    public static void start() {
-        SpringApplication.run(ShareItApp.class);
-    }
 
     @AfterEach
     public void cleanUp() {
