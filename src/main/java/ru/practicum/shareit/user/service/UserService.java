@@ -2,6 +2,7 @@ package ru.practicum.shareit.user.service;
 
 import ru.practicum.shareit.exception.notFound.UserNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.List;
 
@@ -17,4 +18,6 @@ public interface UserService {
     void delete(long id);
 
     void throwIfRepositoryNotContains(long id) throws UserNotFoundException;
+
+    User findByIdOrThrow(long id) throws UserNotFoundException;
 }
