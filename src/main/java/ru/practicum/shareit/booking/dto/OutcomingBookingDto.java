@@ -13,9 +13,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class OutcomingBookingDto extends BookingDto {
-
     ItemDto item;
     UserDto booker;
+
     public OutcomingBookingDto(long id, LocalDateTime start, LocalDateTime end, BookingStatus status,
                                ItemDto item, UserDto booker) {
         super(id, start, end, status);

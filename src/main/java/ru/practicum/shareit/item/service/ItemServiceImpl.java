@@ -136,7 +136,7 @@ public class ItemServiceImpl implements ItemService {
 
     private void throwIfBookingForCommentNotFound(Comment comment) {
         if (!Integer.valueOf(1).equals(
-                bookingRepository.LastCurrentBookingExistsForCommentAuthor(comment.getItem(),
+                bookingRepository.lastCurrentBookingExistsForCommentAuthor(comment.getItem(),
                         comment.getAuthor(), LocalDateTime.now())
         )) {
             throw new BookingForCommentNotFoundException(String.format("Для пользователя с id = %d "

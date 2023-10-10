@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class IncomingAndNestedInItemDtoBookingDto extends BookingDto {
-
     private Long itemId;
     private Long bookerId;
+
     public IncomingAndNestedInItemDtoBookingDto(long id, LocalDateTime start, LocalDateTime end, BookingStatus status,
                                                 long itemId, long bookerId) {
         super(id, start, end, status);

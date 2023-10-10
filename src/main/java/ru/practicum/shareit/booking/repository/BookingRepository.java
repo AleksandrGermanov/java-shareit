@@ -36,9 +36,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findCurrentByItemOwner(@Param("itemOwnerId") long itemOwnerId,
                                          @Param("now") LocalDateTime now);
 
-    List<Booking> findAllByBookerIdAndStatusOrderByStartDesc(long bookerId, BookingStatus Status);
+    List<Booking> findAllByBookerIdAndStatusOrderByStartDesc(long bookerId, BookingStatus status);
 
-    List<Booking> findAllByItemOwnerIdAndStatusOrderByStartDesc(long itemOwnerId, BookingStatus Status);
+    List<Booking> findAllByItemOwnerIdAndStatusOrderByStartDesc(long itemOwnerId, BookingStatus status);
 
     List<Booking> findAllByBookerIdAndStatusInAndStartIsAfterOrderByStartDesc(long bookerId, BookingStatus[] status,
                                                                               LocalDateTime now);
@@ -70,7 +70,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             + "AND b.start < :now "
             + "AND b.status = 'APPROVED'"
             + ")")
-    Integer LastCurrentBookingExistsForCommentAuthor(@Param("item") Item item,
+    Integer lastCurrentBookingExistsForCommentAuthor(@Param("item") Item item,
                                                      @Param("author") User author,
                                                      @Param("now") LocalDateTime now);
 }
