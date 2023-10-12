@@ -11,14 +11,14 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
-public class ItemDtoWithBookingsAndComments extends ItemDto {
+public class AdvancedItemDto extends ItemDto {
     private List<CommentDto> comments;
     private BookingDto lastBooking;
     private BookingDto nextBooking;
 
-    public ItemDtoWithBookingsAndComments(Long id, Long ownerId, String name, String description, Boolean available,
-                                          Long requestId, BookingDto lastBooking,
-                                          BookingDto nextBooking, List<CommentDto> comments) {
+    public AdvancedItemDto(Long id, Long ownerId, String name, String description, Boolean available,
+                           Long requestId, BookingDto lastBooking,
+                           BookingDto nextBooking, List<CommentDto> comments) {
         super(id, ownerId, name, description, available, requestId);
         this.lastBooking = lastBooking;
         this.nextBooking = nextBooking;

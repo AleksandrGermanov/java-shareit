@@ -1,10 +1,9 @@
 package ru.practicum.shareit.item.service;
 
-import ru.practicum.shareit.exception.notFound.ItemNotFoundException;
 import ru.practicum.shareit.item.dto.comment.CommentDto;
 import ru.practicum.shareit.item.dto.comment.IncomingCommentDto;
+import ru.practicum.shareit.item.dto.item.AdvancedItemDto;
 import ru.practicum.shareit.item.dto.item.ItemDto;
-import ru.practicum.shareit.item.dto.item.ItemDtoWithBookingsAndComments;
 import ru.practicum.shareit.item.model.Item;
 
 import javax.validation.Valid;
@@ -16,7 +15,7 @@ public interface ItemService {
 
     CommentDto create(IncomingCommentDto commentDto);
 
-    List<ItemDtoWithBookingsAndComments> findAllByOwner(@Valid @NotNull long ownerId);
+    List<AdvancedItemDto> findAllByOwner(@Valid @NotNull long ownerId);
 
     List<ItemDto> searchByText(String text);
 
@@ -26,5 +25,5 @@ public interface ItemService {
 
     void delete(long id);
 
-    Item findByIdOrThrow(long id) throws ItemNotFoundException;
+    Item findByIdOrThrow(long id);
 }

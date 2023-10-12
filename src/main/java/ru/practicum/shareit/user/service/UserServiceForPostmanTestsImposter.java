@@ -13,6 +13,7 @@ import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +26,7 @@ public class UserServiceForPostmanTestsImposter implements UserService {
     private final UserMapper userMapper;
     private final ShareItValidator shareItValidator;
 
+    @Transactional
     @Override
     public UserDto create(UserDto userDto) {
         User userFromDto = userMapper.userFromDto(userDto);
@@ -38,6 +40,7 @@ public class UserServiceForPostmanTestsImposter implements UserService {
         return userMapper.userToDto(userRepository.save(userFromDto));
     }
 
+    @Transactional
     @Override
     public List<UserDto> findAll() {
         return userRepository.findAll().stream()
@@ -45,11 +48,13 @@ public class UserServiceForPostmanTestsImposter implements UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public UserDto retrieve(long id) {
         return userMapper.userToDto(findByIdOrThrow(id));
     }
 
+    @Transactional
     @Override
     public UserDto update(UserDto userDto) {
         User userToUpdate = findByIdOrThrow(userDto.getId());
@@ -62,6 +67,7 @@ public class UserServiceForPostmanTestsImposter implements UserService {
         return userMapper.userToDto(userRepository.save(userToUpdate));
     }
 
+    @Transactional
     @Override
     public void delete(long id) {
         throwIfRepositoryNotContains(id);
@@ -75,6 +81,7 @@ public class UserServiceForPostmanTestsImposter implements UserService {
         }
     }
 
+    @Override
     public User findByIdOrThrow(long id) throws UserNotFoundException {
         return userRepository.findById(id).orElseThrow(() ->
                 new UserNotFoundException("Пользователь с id = " + id + " не найден."));

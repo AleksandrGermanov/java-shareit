@@ -2,9 +2,10 @@ package ru.practicum.shareit.item.dto.comment;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import ru.practicum.shareit.exception.notFound.ItemNotFoundException;
 import ru.practicum.shareit.item.model.Comment;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
 
 @Component
@@ -14,11 +15,8 @@ public class CommentMapperImpl implements CommentMapper {
     private final UserService userService;
 
     @Override
-    public Comment commentFromDto(IncomingCommentDto dto) {
-        return new Comment(dto.getId(), dto.getText(), itemRepository.findById(dto.getItemId())
-                .orElseThrow(() -> new ItemNotFoundException(
-                        "Не найден объект с id = " + dto.getItemId() + ".")),
-                userService.findByIdOrThrow(dto.getAuthorId()),
+    public Comment commentFromDto(IncomingCommentDto dto, Item item, User author) {
+        return new Comment(dto.getId(), dto.getText(), item, author,
                 dto.getCreated());
     }
 

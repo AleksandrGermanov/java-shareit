@@ -29,7 +29,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query("SELECT b FROM Booking b "
             + "JOIN FETCH b.item "
-            + "WHERE b.item.ownerId = :itemOwnerId "
+            + "WHERE b.item.owner.id = :itemOwnerId "
             + "AND b.start < :now "
             + "AND b.end > :now "
             + "ORDER BY b.start ASC")

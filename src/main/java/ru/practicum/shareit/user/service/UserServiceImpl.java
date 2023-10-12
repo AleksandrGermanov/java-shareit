@@ -12,6 +12,7 @@ import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,6 +24,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final ShareItValidator shareItValidator;
 
+    @Transactional
     @Override
     public UserDto create(UserDto userDto) {
         User userFromDto = userMapper.userFromDto(userDto);
@@ -32,6 +34,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.userToDto(userRepository.save(userFromDto));
     }
 
+    @Transactional
     @Override
     public List<UserDto> findAll() {
         return userRepository.findAll().stream()
@@ -39,11 +42,13 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public UserDto retrieve(long id) {
         return userMapper.userToDto(findByIdOrThrow(id));
     }
 
+    @Transactional
     @Override
     public UserDto update(UserDto userDto) {
         User userToUpdate = findByIdOrThrow(userDto.getId());
@@ -56,6 +61,7 @@ public class UserServiceImpl implements UserService {
         return userMapper.userToDto(userRepository.save(userToUpdate));
     }
 
+    @Transactional
     @Override
     public void delete(long id) {
         throwIfRepositoryNotContains(id);
@@ -63,25 +69,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void throwIfRepositoryNotContains(long id) throws UserNotFoundException {
+    public void throwIfRepositoryNotContains(long id) {
         if (!userRepository.existsById(id)) {
             throw new UserNotFoundException("Пользователь с id = " + id + " не найден.");
         }
     }
 
-    public User findByIdOrThrow(long id) throws UserNotFoundException {
+    @Override
+    public User findByIdOrThrow(long id) {
         return userRepository.findById(id).orElseThrow(() ->
                 new UserNotFoundException("Пользователь с id = " + id + " не найден."));
     }
 
-    private void throwIfRepositoryContains(long id) throws UserAlreadyExistsException {
+    private void throwIfRepositoryContains(long id) {
         if (userRepository.existsById(id)) {
             throw new UserAlreadyExistsException("Пользователь с id = " + id + " уже существует. "
                     + "Попробуйте изменить передаваемые данные или используйте подходящий метод.");
         }
     }
 
-    private void throwIfEmailAlreadyExists(String email) throws EmailAlreadyExistsException {
+    private void throwIfEmailAlreadyExists(String email) {
         if (userRepository.findAll().isEmpty()) {
             return;
         }

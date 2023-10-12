@@ -2,12 +2,12 @@ package ru.practicum.shareit.booking.service;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import ru.practicum.shareit.booking.dto.BookingDto;
-import ru.practicum.shareit.booking.dto.IncomingAndNestedInItemDtoBookingDto;
+import ru.practicum.shareit.booking.dto.SimpleBookingDto;
 
 import java.util.List;
 
 public interface BookingService {
-    BookingDto create(IncomingAndNestedInItemDtoBookingDto bookingDto, long bookerId);
+    BookingDto create(SimpleBookingDto bookingDto, long bookerId);
 
     BookingDto update(long bookingId, boolean approved, long itemOwnerId);
 

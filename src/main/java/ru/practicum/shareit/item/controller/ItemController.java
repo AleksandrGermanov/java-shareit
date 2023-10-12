@@ -6,8 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.comment.CommentDto;
 import ru.practicum.shareit.item.dto.comment.IncomingCommentDto;
+import ru.practicum.shareit.item.dto.item.AdvancedItemDto;
 import ru.practicum.shareit.item.dto.item.ItemDto;
-import ru.practicum.shareit.item.dto.item.ItemDtoWithBookingsAndComments;
 import ru.practicum.shareit.item.service.ItemService;
 
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping
-    public List<ItemDtoWithBookingsAndComments> findAllByOwner(@RequestHeader("X-Sharer-User-Id") long ownerId) {
+    public List<AdvancedItemDto> findAllByOwner(@RequestHeader("X-Sharer-User-Id") long ownerId) {
         logInfoIncomingRequest(log, "GET /items", ownerId);
         return itemService.findAllByOwner(ownerId);
     }

@@ -6,6 +6,7 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.item.dto.comment.CommentDto;
 import ru.practicum.shareit.item.dto.comment.CommentMapper;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.model.User;
 
 import java.util.Collections;
 import java.util.List;
@@ -19,26 +20,26 @@ public class ItemMapperImpl implements ItemMapper {
 
     @Override
     public ItemDto itemToDto(Item item) {
-        return new ItemDto(item.getId(), item.getOwnerId(), item.getName(),
+        return new ItemDto(item.getId(), item.getOwner().getId(), item.getName(),
                 item.getDescription(), item.getAvailable(), item.getRequestId());
     }
 
     @Override
-    public ItemDtoWithBookingsAndComments itemToDtoWithBookingsAndComments(Item item, BookingDto lastBooking,
-                                                                           BookingDto nextBooking) {
+    public AdvancedItemDto itemToDtoWithBookingsAndComments(Item item, BookingDto lastBooking,
+                                                            BookingDto nextBooking) {
         List<CommentDto> comments = item.getComments().isEmpty()
                 ? Collections.emptyList()
                 : item.getComments().stream()
                 .map(commentMapper::commentToDto).collect(Collectors.toList());
-        return new ItemDtoWithBookingsAndComments(item.getId(), item.getOwnerId(), item.getName(),
+        return new AdvancedItemDto(item.getId(), item.getOwner().getId(), item.getName(),
                 item.getDescription(), item.getAvailable(), item.getRequestId(),
                 lastBooking, nextBooking, comments);
     }
 
     @Override
-    public Item itemFromDto(ItemDto dto) {
+    public Item itemFromDto(ItemDto dto, User owner) {
         long id = dto.getId() != null ? dto.getId() : 0L;
-        return new Item(id, dto.getOwnerId(), dto.getName(),
+        return new Item(id, owner, dto.getName(),
                 dto.getDescription(), dto.getAvailable(), dto.getRequestId(), Collections.emptyList());
     }
 }
