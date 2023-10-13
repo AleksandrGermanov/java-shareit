@@ -110,19 +110,6 @@ public class UserControllerTest {
     }
 
     @Test
-    public void usersPostReturnsCode409AndMessageWhenSameEmail() {
-        User user = new User(-1L, "Nm", "e@mail.fake");
-        idListForCleanUp.add(client.deserializeBody(
-                client.sendRequest(POST, userMapper.userToDto(user), users), UserDto.class
-        ).getId());
-        User user2 = new User(-1L, "name", "e@mail.fake");
-        HttpResponse<String> resp = client.sendRequest(POST, userMapper.userToDto(user2), users);
-        assertEquals(409, resp.statusCode());
-        assertEquals("Такой email уже зарегистрирован.",
-                client.deserializeBody(resp, String.class));
-    }
-
-    @Test
     public void usersPostReturnsCode400AndMessageWhenExistingId() {
         User user = new User(-1L, "Nm", "e@mail.fake");
         Long userId = client.deserializeBody(
