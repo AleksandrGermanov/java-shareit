@@ -1,4 +1,4 @@
-package ru.practicum.shareit.testClient;
+package ru.practicum.shareit.TestClient;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

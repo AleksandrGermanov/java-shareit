@@ -6,7 +6,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.practicum.shareit.testClient.TestClient;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
@@ -17,13 +16,13 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static ru.practicum.shareit.testClient.TestClient.TestHttpMethod.*;
+import static ru.practicum.shareit.TestClient.TestClient.TestHttpMethod.*;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserControllerTest {
-    private final TestClient client;
+    private final ru.practicum.shareit.TestClient.TestClient client;
     private final UserMapper userMapper;
     private final String users = "/users";
     private final List<Long> idListForCleanUp = new ArrayList<>();

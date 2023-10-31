@@ -3,7 +3,7 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.Util.ShareItValidator;
+import ru.practicum.shareit.util.ShareItValidator;
 import ru.practicum.shareit.exception.alreadyExists.EmailAlreadyExistsException;
 import ru.practicum.shareit.exception.alreadyExists.UserAlreadyExistsException;
 import ru.practicum.shareit.exception.notFound.UserNotFoundException;
