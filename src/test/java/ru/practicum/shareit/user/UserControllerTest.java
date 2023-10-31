@@ -16,13 +16,13 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static ru.practicum.shareit.testClient.TestClient.TestHttpMethod.*;
+import static ru.practicum.shareit.TestClient.TestClient.TestHttpMethod.*;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserControllerTest {
-    private final ru.practicum.shareit.testClient.TestClient client;
+    private final ru.practicum.shareit.TestClient.TestClient client;
     private final UserMapper userMapper;
     private final String users = "/users";
     private final List<Long> idListForCleanUp = new ArrayList<>();
