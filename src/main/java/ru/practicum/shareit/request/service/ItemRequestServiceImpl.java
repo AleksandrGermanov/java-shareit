@@ -53,7 +53,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     @Override
     public List<ItemRequestDto> findAll(long seekerId, int from, int size) {
         userService.throwIfRepositoryNotContains(seekerId);
-        PaginationInfo info = new PaginationInfo(0, 2);
+        PaginationInfo info = new PaginationInfo(from, size);
         shareItValidator.validate(info);
         info.setSort(Sort.by(Sort.Direction.DESC, "created"));
         return itemRequestRepository.findAllByRequesterIdIsNot(seekerId, info.asPageRequest()).stream()
