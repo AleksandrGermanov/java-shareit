@@ -1,4 +1,4 @@
-package ru.practicum.shareit.Util;
+package ru.practicum.shareit.util;
 
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;

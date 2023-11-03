@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.dto.comment;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
+@NoArgsConstructor
 public class IncomingCommentDto extends CommentDto {
     private Long authorId;
     private Long itemId;

@@ -1,10 +1,8 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.validation.annotation.Validated;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import javax.persistence.*;
@@ -39,8 +37,15 @@ public class Item {
     @NotNull(message = "Поле 'isAvailable' не может быть незаполненным.")
     @Column(nullable = false)
     private Boolean available;
-    @Column(name = "request_id", nullable = false)
-    private Long requestId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "request_id")
+    @ToString.Exclude
+    private ItemRequest request;
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
     private List<Comment> comments;
+
+    @ToString.Include
+    private Long requestId() {
+        return request != null ? request.getId() : null; //избегаем рекурсивных вызовов при логировании.
+    }
 }

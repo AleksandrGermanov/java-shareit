@@ -17,8 +17,8 @@ import ru.practicum.shareit.exception.notFound.NotFoundException;
 import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
 
-import static ru.practicum.shareit.Util.Logging.logDebugException;
-import static ru.practicum.shareit.Util.Logging.logWarnException;
+import static ru.practicum.shareit.util.Logging.logDebugException;
+import static ru.practicum.shareit.util.Logging.logWarnException;
 
 @Slf4j
 @RestControllerAdvice

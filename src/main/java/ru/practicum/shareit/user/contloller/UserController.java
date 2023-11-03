@@ -9,7 +9,7 @@ import ru.practicum.shareit.user.service.UserService;
 
 import java.util.List;
 
-import static ru.practicum.shareit.Util.Logging.logInfoIncomingRequest;
+import static ru.practicum.shareit.util.Logging.logInfoIncomingRequest;
 
 @Slf4j
 @RestController

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.Util.ShareItValidator;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.alreadyExists.EmailAlreadyExistsException;
 import ru.practicum.shareit.exception.alreadyExists.UserAlreadyExistsException;
 import ru.practicum.shareit.exception.notFound.UserNotFoundException;
@@ -12,8 +12,8 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.util.ShareItValidator;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +40,7 @@ public class UserServiceForPostmanTestsImposter implements UserService {
         return userMapper.userToDto(userRepository.save(userFromDto));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public List<UserDto> findAll() {
         return userRepository.findAll().stream()
@@ -48,7 +48,7 @@ public class UserServiceForPostmanTestsImposter implements UserService {
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public UserDto retrieve(long id) {
         return userMapper.userToDto(findByIdOrThrow(id));
@@ -62,7 +62,6 @@ public class UserServiceForPostmanTestsImposter implements UserService {
             throwIfEmailAlreadyExists(userDto.getEmail());
         }
         mergeDtoIntoExistingUser(userDto, userToUpdate);
-        throwIfRepositoryNotContains(userToUpdate.getId());
         shareItValidator.validate(userToUpdate);
         return userMapper.userToDto(userRepository.save(userToUpdate));
     }
@@ -74,6 +73,7 @@ public class UserServiceForPostmanTestsImposter implements UserService {
         userRepository.deleteById(id);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public void throwIfRepositoryNotContains(long id) throws UserNotFoundException {
         if (!userRepository.existsById(id)) {
@@ -106,7 +106,7 @@ public class UserServiceForPostmanTestsImposter implements UserService {
     private boolean emailAlreadyExists(String email) {
         return userRepository.findAll().stream()
                 .map(User::getEmail)
-                .anyMatch(string -> string.equals(email));
+                .anyMatch(string -> string.equalsIgnoreCase(email));
     }
 
     private boolean haveSameEmail(User beforeUpdate, UserDto updated) {
@@ -114,9 +114,6 @@ public class UserServiceForPostmanTestsImposter implements UserService {
     }
 
     private void mergeDtoIntoExistingUser(UserDto updated, User beforeUpdate) {
-        if (updated.getId() != null) {
-            beforeUpdate.setId(updated.getId());
-        }
         if (updated.getName() != null) {
             beforeUpdate.setName(updated.getName());
         }

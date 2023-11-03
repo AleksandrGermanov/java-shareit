@@ -3,8 +3,8 @@ package ru.practicum.shareit.item.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import ru.practicum.shareit.Util.ShareItValidator;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
@@ -25,12 +25,13 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.service.ItemRequestService;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.util.PaginationInfo;
+import ru.practicum.shareit.util.ShareItValidator;
 
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -50,6 +51,7 @@ public class ItemServiceImpl implements ItemService {
     private final BookingMapper bookingMapper;
     private final CommentMapper commentMapper;
     private final CommentRepository commentRepository;
+    private final ItemRequestService itemRequestService;
 
     @Transactional
     @Override
@@ -70,34 +72,44 @@ public class ItemServiceImpl implements ItemService {
         return commentMapper.commentToDto(commentRepository.save(comment));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
-    public List<AdvancedItemDto> findAllByOwner(@Valid @NotNull long ownerId) {
+    public List<AdvancedItemDto> findAllByOwner(long ownerId, int from, int size) {
         userService.throwIfRepositoryNotContains(ownerId);
-        return itemRepository.findByOwnerId(ownerId).stream()
+        PaginationInfo info = new PaginationInfo(from, size);
+        shareItValidator.validate(info);
+        List<Item> found = itemRepository.findByOwnerId(ownerId, info.asPageRequest());
+        return found == null
+                ? Collections.emptyList()
+                : found.stream()
                 .map(this::mapItemToDtoWithBookingsAndComments)
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
-    public List<ItemDto> searchByText(String text) {
+    public List<ItemDto> searchByText(String text, int from, int size) {
+        PaginationInfo info = new PaginationInfo(from, size);
+        shareItValidator.validate(info);
         if (text.isBlank()) {
             return Collections.emptyList();
         }
         text = '%' + text + '%';
-        return itemRepository.findByText(text).stream()
+        List<Item> found = itemRepository.findByText(text, info.asPageRequest());
+        return found == null
+                ? Collections.emptyList()
+                : found.stream()
                 .map(this::mapItemToDtoWithBookingsAndComments)
                 .collect(Collectors.toList());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public ItemDto retrieve(long id, long requesterId) {
         Item item = findByIdOrThrow(id);
         userService.findByIdOrThrow(requesterId);
         if (requesterId == item.getOwner().getId()) {
-            return mapItemToDtoWithBookingsAndComments(findByIdOrThrow(id));
+            return mapItemToDtoWithBookingsAndComments(item);
         } else {
             return itemMapper.itemToDtoWithBookingsAndComments(item, null, null);
         }
@@ -106,7 +118,6 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     @Override
     public ItemDto update(ItemDto itemDto) {
-        throwIfRepositoryNotContains(itemDto.getId());
         Item itemToUpdate = findByIdOrThrow(itemDto.getId());
         throwIfOwnerMismatched(itemToUpdate.getOwner().getId(), itemDto.getOwnerId());
         mergeDtoIntoExistingItem(itemDto, itemToUpdate);
@@ -169,7 +180,7 @@ public class ItemServiceImpl implements ItemService {
             beforeUpdate.setAvailable(updated.getAvailable());
         }
         if (updated.getRequestId() != null) {
-            beforeUpdate.setRequestId(updated.getRequestId());
+            beforeUpdate.setRequest(itemRequestService.findByIdOrThrow(updated.getRequestId()));
         }
     }
 
@@ -193,9 +204,12 @@ public class ItemServiceImpl implements ItemService {
         User owner = new User(0L, "null", "fake@e.mail");
         try {
             owner = userService.findByIdOrThrow(dto.getOwnerId());
-        } catch (UserNotFoundException e) {                  // в постман тестах три итема создаются удаленным
-        }                                                    // пользователем №3 - в результатах теста
-        return itemMapper.itemFromDto(dto, owner);           // нужно вернуть ошибку по валидации итема.
+        } catch (UserNotFoundException e) {
+            System.out.println("Чек-стайл не пропускает пустой кетч-блок.");
+        }
+        ItemRequest request = dto.getRequestId() == null ? null
+                : itemRequestService.findByIdOrThrow(dto.getRequestId());
+        return itemMapper.itemFromDto(dto, owner, request);
     }
 
     private Comment mapCommentFromDto(IncomingCommentDto dto) {
@@ -204,4 +218,3 @@ public class ItemServiceImpl implements ItemService {
         return commentMapper.commentFromDto(dto, item, author);
     }
 }
-

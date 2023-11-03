@@ -1,8 +1,9 @@
 package ru.practicum.shareit.booking.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.Util.ShareItValidator;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.dto.SimpleBookingDto;
@@ -24,14 +25,17 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.service.UserService;
+import ru.practicum.shareit.util.PaginationInfo;
+import ru.practicum.shareit.util.ShareItValidator;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
 
@@ -67,7 +71,7 @@ public class BookingServiceImpl implements BookingService {
         return mapBookingToOutcomingDto(bookingRepository.save(booking));
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
     public BookingDto retrieve(long bookingId, long itemOwnerOrBookerId) {
         Booking booking = findByIdOrThrow(bookingId);
@@ -75,13 +79,16 @@ public class BookingServiceImpl implements BookingService {
         return mapBookingToOutcomingDto(booking);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
-    public List<BookingDto> findByBookerAndByState(BookingState state, long bookerId) {
+    public List<BookingDto> findByBookerAndByState(BookingState state, long bookerId, int from, int size) {
         userService.throwIfRepositoryNotContains(bookerId);
+        PaginationInfo info = new PaginationInfo(from, size);
+        shareItValidator.validate(info);
         switch (state) {
             case ALL: {
-                return bookingRepository.findAllByBookerIdOrderByStartDesc(bookerId).stream()
+                return bookingRepository.findAllByBookerIdOrderByStartDesc(bookerId, info.asPageRequest())
+                        .stream()
                         .map(this::mapBookingToOutcomingDto)
                         .collect(Collectors.toList());
             }
@@ -123,13 +130,16 @@ public class BookingServiceImpl implements BookingService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
-    public List<BookingDto> findByItemOwnerAndByState(BookingState state, long itemOwnerId) {
+    public List<BookingDto> findByItemOwnerAndByState(BookingState state, long itemOwnerId, int from, int size) {
         userService.throwIfRepositoryNotContains(itemOwnerId);
+        PaginationInfo info = new PaginationInfo(from, size);
+        shareItValidator.validate(info);
         switch (state) {
             case ALL: {
-                return bookingRepository.findAllByItemOwnerIdOrderByStartDesc(itemOwnerId).stream()
+                return bookingRepository.findAllByItemOwnerIdOrderByStartDesc(itemOwnerId, info.asPageRequest())
+                        .stream()
                         .map(this::mapBookingToOutcomingDto)
                         .collect(Collectors.toList());
             }

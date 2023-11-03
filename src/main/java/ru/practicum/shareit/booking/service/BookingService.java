@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking.service;
 
-import org.springframework.web.bind.annotation.GetMapping;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.SimpleBookingDto;
 
@@ -13,8 +12,7 @@ public interface BookingService {
 
     BookingDto retrieve(long bookingId, long itemOwnerOrBookerId);
 
-    List<BookingDto> findByBookerAndByState(BookingState state, long bookerId);
+    List<BookingDto> findByBookerAndByState(BookingState state, long bookerId, int from, int size);
 
-    @GetMapping("/owner")
-    List<BookingDto> findByItemOwnerAndByState(BookingState state, long itemOwnerId);
+    List<BookingDto> findByItemOwnerAndByState(BookingState state, long itemOwnerId, int from, int size);
 }

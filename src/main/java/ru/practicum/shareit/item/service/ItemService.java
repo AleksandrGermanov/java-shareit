@@ -15,9 +15,9 @@ public interface ItemService {
 
     CommentDto create(IncomingCommentDto commentDto);
 
-    List<AdvancedItemDto> findAllByOwner(@Valid @NotNull long ownerId);
+    List<AdvancedItemDto> findAllByOwner(@Valid @NotNull long ownerId, int from, int size);
 
-    List<ItemDto> searchByText(String text);
+    List<ItemDto> searchByText(String text, int from, int size);
 
     ItemDto retrieve(long id, long requesterId);
 
