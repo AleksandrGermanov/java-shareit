@@ -14,7 +14,6 @@ import ru.practicum.shareit.exception.mismatch.TimeMismatchException;
 import ru.practicum.shareit.exception.notFound.BookingForCommentNotFoundException;
 import ru.practicum.shareit.exception.notFound.NotFoundException;
 
-import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
 
 import static ru.practicum.shareit.util.Logging.logDebugException;

@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 public @interface EndIsAfterStart {
     String message() default "Время окончания бронирования должно быть позже времени его начала.";
 
-    Class<?>[] groups() default { };
+    Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default { };
+    Class<? extends Payload>[] payload() default {};
 }

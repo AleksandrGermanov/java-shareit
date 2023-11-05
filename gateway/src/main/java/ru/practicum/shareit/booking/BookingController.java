@@ -6,10 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.UnknownStateException;
 import ru.practicum.shareit.booking.dto.BookItemRequestDto;
 import ru.practicum.shareit.booking.dto.BookingState;
 import ru.practicum.shareit.util.EndIsAfterStart;
+import ru.practicum.shareit.util.UnknownStateException;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
@@ -41,8 +41,8 @@ public class BookingController {
                                                             @RequestHeader("X-Sharer-User-Id") long itemOwnerId,
                                                             @PositiveOrZero @RequestParam(defaultValue = "0") int from,
                                                             @Positive @RequestParam(defaultValue = "20") int size) {
-		BookingState stateValue = BookingState.from(state)
-				.orElseThrow(() -> new UnknownStateException("Unknown state: " + state));
+        BookingState stateValue = BookingState.from(state)
+                .orElseThrow(() -> new UnknownStateException("Unknown state: " + state));
         logInfoIncomingRequest(log, "GET /bookings/owner", stateValue, itemOwnerId, from, size);
         return bookingClient.findByItemOwnerAndByState(itemOwnerId, stateValue, from, size);
     }
@@ -63,7 +63,7 @@ public class BookingController {
 
     @PatchMapping("/{bookingId}")
     public ResponseEntity<Object> update(@PathVariable long bookingId, @RequestParam boolean approved,
-                             @RequestHeader("X-Sharer-User-Id") long itemOwnerId) {
+                                         @RequestHeader("X-Sharer-User-Id") long itemOwnerId) {
         logInfoIncomingRequest(log, "PATCH /bookings/{bookingId}", bookingId, approved, itemOwnerId);
         return bookingClient.update(bookingId, approved, itemOwnerId);
     }

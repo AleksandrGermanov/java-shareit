@@ -12,9 +12,9 @@ import java.time.LocalDateTime;
 
 @ExtendWith(MockitoExtension.class)
 public class BookingEndFieldValidatorTest {
+    private final BookingEndFieldValidator validator = new BookingEndFieldValidator();
     @Mock
     ConstraintValidatorContext context;
-    private final BookingEndFieldValidator validator = new BookingEndFieldValidator();
 
     @Test
     public void methodValidateWhenEndIsAfterStartReturnsTrue() {

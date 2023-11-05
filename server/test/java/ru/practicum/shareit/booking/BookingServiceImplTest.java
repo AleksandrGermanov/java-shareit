@@ -21,7 +21,6 @@ import ru.practicum.shareit.exception.alreadyExists.ApprovedAlreadyExistsExcepti
 import ru.practicum.shareit.exception.alreadyExists.BookingAlreadyExistsException;
 import ru.practicum.shareit.exception.mismatch.ItemOwnerOrBookerMismatchException;
 import ru.practicum.shareit.exception.mismatch.OwnerMismatchException;
-import ru.practicum.shareit.exception.mismatch.TimeMismatchException;
 import ru.practicum.shareit.exception.notFound.BookingNotFoundException;
 import ru.practicum.shareit.item.dto.item.ItemDto;
 import ru.practicum.shareit.item.dto.item.ItemMapper;

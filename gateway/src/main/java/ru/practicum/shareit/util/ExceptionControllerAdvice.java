@@ -1,4 +1,4 @@
-package ru.practicum.shareit;
+package ru.practicum.shareit.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -20,7 +20,7 @@ public class ExceptionControllerAdvice {
     @ExceptionHandler({UnknownStateException.class})
     public ResponseEntity<String> handleBadRequestForUnsupportedStatus(UnknownStateException e) {
         logDebugException(log, e);
-        return new ResponseEntity<>("{\"error\" : \""+ e.getMessage() +"\"}", HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>("{\"error\" : \"" + e.getMessage() + "\"}", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

@@ -11,7 +11,6 @@ import ru.practicum.shareit.util.Logging;
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
-import java.util.Map;
 
 @RestController
 @Validated
